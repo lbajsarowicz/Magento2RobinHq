@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Emico\RobinHqLib\Model\Customer as RobinHqCustomerModel;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\StoreManagerInterface;
 use Mockery;
 use Mockery\MockInterface;
 use UnitTester;
@@ -52,7 +53,8 @@ class CustomerDataProviderTest extends \Codeception\Test\Unit
 
         $this->dataProvider = new CustomerDataProvider(
             $this->customerRepositoryMock,
-            $customerFactoryMock
+            $customerFactoryMock,
+            Mockery::mock(StoreManagerInterface::class, ['getWebsites' => []])
         );
     }
 

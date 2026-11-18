@@ -4,9 +4,10 @@ namespace Emico\RobinHqTest\DataProvider\EavAttribute;
 
 use Codeception\Test\Unit;
 use Emico\RobinHq\DataProvider\EavAttribute\AttributeRetriever;
+use Emico\RobinHq\Model\Config\Source\OrderAttributes;
 use Magento\Catalog\Model\Product;
-use Magento\Eav\Api\Data\AttributeInterface;
 use Magento\Eav\Model\Config;
+use Magento\Eav\Model\Entity\Attribute\AbstractAttribute;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Mockery;
@@ -32,7 +33,7 @@ class AttributeRetrieverTest extends Unit
     public function _before()
     {
         $attributeMock = Mockery::mock(
-            AttributeInterface::class,
+            AbstractAttribute::class,
             [
                 'getDefaultFrontendLabel' => 'frontend label',
                 'usesSource' => false
@@ -44,7 +45,10 @@ class AttributeRetrieverTest extends Unit
             ->shouldReceive('getAttribute')
             ->andReturn($attributeMock)
             ->byDefault();
-        $this->attributeRetriever = new AttributeRetriever($this->eavConfigMock);
+        $this->attributeRetriever = new AttributeRetriever(
+            $this->eavConfigMock,
+            Mockery::mock(OrderAttributes::class)
+        );
     }
 
     public function testGetAttributeValueUsesGetAttributeText(): void
